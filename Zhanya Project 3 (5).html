@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Londrina+Shadow' rel='stylesheet' type='text/css'>
+<style>
+body {
+  font-family: font-family: 'Satisfy', cursive;
+  margin: 0 auto;
+  max-width: 600px;
+  background: #022e9e;
+}
+div {
+  height: 200px;
+  background-size: cover;
+  position: relative;
+  margin: 40px 0 0 0;
+  border-radius: 12px;
+}
+h1 {
+  font-family: 'Permanent Marker', cursive;
+  text-align: center;
+  font-size: 75px;
+  color: #f74343;
+  margin: 60px 0 0 0;
+}
+h2 {
+  text-align: center;
+  color:#5ef7f5 ;
+  margin: 0px 0 70px 0;
+}
+p {
+  color: rgba(25,255,255,1);
+  background: ;blue
+  background: linear-gradient(bottom, rgba(0,50,4,1), rgba(0,0,0,.4));
+  background: -webkit-linear-gradient(bottom, rgba(0,4,0,1), rgba(1000,8,0,.4));
+  background: -moz-linear-gradient(bottom, rgba(0,0,0,1), rgba(0,0,0,.4));
+  padding: 10px;
+  line-height: 28px;
+  text-align: justify;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  height: 30px;
+  transition: height .5s;
+  -webkit-transition: height .5s;
+  -moz-transition: height .5s;
+}
+
+input {
+	font-size: 22px;
+}
+
+small {
+  opacity: 0;
+}
+
+.show-description p {
+  height: 150px;
+}
+
+.show-description small {
+  opacity: 1;
+}
+
+.first{
+  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWH9JRrx4g46qTS8NzQlr_INiUp-eyQEVaiQ&usqp=CAU);
+}
+.second{
+  background-image: url(https://champagne-tastes.com/wp-content/uploads/2017/10/crab-fries-small-1-683x1024-1.jpg);
+}
+.dessert{
+  background-image: url(https://theartofforking.files.wordpress.com/2014/04/redbean-taiyaki.jpg);
+}
+.price {
+  float: right;
+}
+@media (max-width: 500px) {
+  h1 {
+    font-size: 50px;
+    margin-top: 20px;
+    line-height: 40px;
+  }
+  h2 {
+    font-size: 20px;
+    margin: 20px 0 30px 0;
+  }
+  div {
+    margin: 20px 12px 0 12px;
+  }
+  p {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  small {
+    font-size: 16px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+<h1>Zhanya's Seafood Palace</h1>
+<h2>A Seafood Dream In NYC</h2>
+<div class="first">
+	 <input type="number" min="0" style="width: 50px" class="quantities"> 
+  <p>Seafood Boil <span class="price">$67</span><br />
+  <small>Shrimp, king crab legs, clams, sausage, potatoes, and corn cook together in a pot and are served with a Cajun-spiced butter sauce. </small></p>
+</div>
+
+<div class="second">
+	 <input type="number" min="0" style="width: 50px" class="quantities"> 
+  <p>Crab Fries <span class="price">$16</span><br />
+  <small>crinkle-cut French fries sprinkled with a secret blend of crabby spices and served with its one-of-a-kind White Creamy Cheese Sauce for dipping.
+</small></p>
+</div>
+  
+<div class="dessert">
+	 <input type="number" min="0" style="width: 50px" class="quantities"> 
+  <p>Taiyaki Cake <span class="price">$7</span><br />
+  <small>Taiyaki is a Japanese fish-shaped cake, commonly sold as street food. It imitates the shape of tai, which it is named after. The most common filling is red bean paste that is made from sweetened adzuki beans. Other common fillings may be custard, chocolate, cheese, or sweet potato.</small></p>
+</div>
+
+
+	<br><br> 
+	<input id="Name" placeholder="Your name">
+  <input type="email" placeholder="Your email"id="Email">
+  <input type="submit"id="submit">
+	<br><br> 
+
+<script>
+  $('div').on('click', function() {
+      $(this).toggleClass('show-description');
+  });
+</script>
+
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3w9TtEjmrj262SIyq0OuebXpMw31PjJA",
+    authDomain: "project-3-98149.firebaseapp.com",
+    projectId: "project-3-98149",
+    storageBucket: "project-3-98149.appspot.com",
+    messagingSenderId: "269081461735",
+    appId: "1:269081461735:web:32220a2582ec23af153342"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+	const db = getDatabase(app);
+	const Name = document.querySelector("#Name") 
+	const Email = document.querySelector("#Email")
+	document.querySelector('#submit').addEventListener('click', Submit)
+	const quantities = document.querySelectorAll(".quantities") 
+	const itemsList = ["The Boil", "Crab Fries", "Taiyaki"]
+	const prices = document.querySelectorAll(".price") 
+	
+	
+	
+	
+	function Submit() {
+		  const timestamp = buildTimestamp()
+		let total = 0 
+	  let cart = { }
+	  for  (let i=0; i<quantities.length; i=i+1) {
+	  	if (quantities[i].value != "0" && quantities[i].value != "") {	
+			  let price = prices[i].innerHTML.replace('$', '')
+			  total = total + quantities[i].value * price 
+	  		cart[itemsList[i]] = parseInt(quantities[i].value) 
+	  	}
+	  	quantities[i].value = ""
+	  }
+		
+   
+		  set(ref(db, timestamp), {
+			  Name: Name.value,
+		      email: Email.value,
+							cart: cart,
+		  totalPrice: total,
+		  paid: "not yet",	
+		  });
+
+		  Name.value = ""
+		  Email.value = ""
+
+
+			
+		}
+	
+		function buildTimestamp() {
+			  const now = new Date();
+			  let timestamp = now.getFullYear().toString() + "/";
+			  //const month = now.toLocaleString('default', { month: 'long' });
+
+			  let month = now.getMonth()+1   //add 1 because Javascript uses 0 for January
+			  month = month.toString()
+			  month = addLeadingZero(month)
+			  timestamp += month + "/"; 
+
+			  let date = now.getDate().toString()
+			  date = addLeadingZero(date)
+			  timestamp += date + "/";
+
+			  let hours = now.getHours().toString()
+			  hours = addLeadingZero(hours)
+			  timestamp += hours + ":";
+
+			  let minutes = now.getMinutes().toString()
+			  minutes = addLeadingZero(minutes)
+			  timestamp += minutes + ":";
+
+			  let seconds = now.getSeconds().toString()
+			  seconds = addLeadingZero(seconds)
+			  timestamp += seconds;
+
+			  return timestamp
+			}
+
+			function addLeadingZero(units) {
+				if (units.length < 2) {
+					units = "0" + units
+				}
+				return units
+			}
+	
+
+		
+</script>
+
+
+</body>
